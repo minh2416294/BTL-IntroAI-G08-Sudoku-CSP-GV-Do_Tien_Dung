@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+
+# Công cụ
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE và hệ điều hành
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Ghi chú làm việc cá nhân, không thuộc sản phẩm
+writing-content/
+artifacts/
+.planning/
+.claude/launch.json
+.claude/settings.local.json

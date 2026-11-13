@@ -39,7 +39,7 @@ select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
 known-first-party = ["sudoku_csp", "app", "experiments", "tests"]
 
 [tool.pyright]
-include = ["sudoku_csp", "experiments", "tests"]
+include = ["sudoku_csp", "app", "experiments", "tests"]
 pythonVersion = "3.11"
 typeCheckingMode = "standard"
 

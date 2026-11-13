@@ -17,6 +17,9 @@ jobs:
       - uses: astral-sh/setup-uv@v10.3.3
         with:
           python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
       - name: Cài thư viện
         run: uv sync --all-extras --locked
       - name: Ruff lint
@@ -27,3 +30,5 @@ jobs:
         run: uv run pyright
       - name: Pytest
         run: uv run pytest -q
+      - name: Test engine phát lại (Node)
+        run: node --test "tests/js/*.test.mjs"

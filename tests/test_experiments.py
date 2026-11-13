@@ -7,7 +7,7 @@ from typing import Any
 
 import pytest
 
-from experiments import notebook_attach_figures, plot_results, run_benchmark
+from experiments import notebook_attach_figures, run_benchmark
 
 FIGURES = [
     "h1_cau_hinh_top95.png",
@@ -21,7 +21,6 @@ FIGURES = [
 def quick_results(tmp_path_factory: pytest.TempPathFactory) -> Path:
     out = tmp_path_factory.mktemp("results")
     run_benchmark.main(["--quick", "--out", str(out)])
-    plot_results.main(["--results", str(out)])
     return out
 
 

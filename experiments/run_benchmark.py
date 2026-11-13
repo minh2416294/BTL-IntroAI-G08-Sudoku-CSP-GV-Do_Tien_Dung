@@ -1,7 +1,9 @@
 """Chạy toàn bộ thí nghiệm và ghi kết quả thô vào `results/`.
 
-    uv run python -m experiments.run_benchmark            # đầy đủ, khoảng 30-40 phút
+    uv run python -m experiments.run_benchmark            # đầy đủ, khoảng 20-30 phút
     uv run python -m experiments.run_benchmark --quick    # bản thu nhỏ để kiểm tra, dưới 1 phút
+
+Chạy xong thì gọi luôn `plot_results`, nên một lệnh tái lập đủ số liệu, bảng và hình.
 
 Thí nghiệm 1 (tìm kiếm hệ thống): đủ 24 tổ hợp kỹ thuật của L6 trên bộ đề tự sinh và top95. Mỗi lượt
 giải có trần số nút; lượt chạm trần được ghi `limit`, không bao giờ tính như đã giải. Ghi vết luôn
@@ -25,7 +27,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from experiments import console_use_utf8
+from experiments import RESULTS_DIR, console_use_utf8, plot_results
 from sudoku_csp.backtracking import (
     BacktrackingOptions,
     backtracking_label,
@@ -40,7 +42,6 @@ from sudoku_csp.local_search import (
     simulated_annealing_solve,
 )
 
-RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 LOCAL_METHODS = ("mc_cell", "mc_box", "sa")
 BACKTRACKING_FIELDS = [
     "puzzle_id",
@@ -281,6 +282,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     elapsed = time.perf_counter() - started
     benchmark_write_env(out / "env.json", cfg, "quick" if args.quick else "full", elapsed)
     print(f"Xong sau {elapsed / 60:.1f} phút, kết quả trong {out}")
+    plot_results.main(["--results", str(out)])
 
 
 if __name__ == "__main__":

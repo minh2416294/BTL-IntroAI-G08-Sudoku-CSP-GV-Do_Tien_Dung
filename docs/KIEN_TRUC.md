@@ -13,8 +13,9 @@ hay một bất biến dưới đây thì cập nhật luôn file này trong cù
 | `data/` | Bộ đề tự sinh và top95, được commit để thí nghiệm tái lập được | Đã có (xem `data/NGUON_DU_LIEU.md`) |
 | `results/` | CSV kết quả thô, `env.json` (tham số và máy), `tables.md`, bảng tổng hợp, `figures/` | Đã có, sinh lại bằng `run_benchmark` rồi `plot_results` |
 
-`run_benchmark` chỉ ghi số liệu thô; `plot_results` chỉ đọc CSV trong `results/` để vẽ, nên có thể vẽ
-lại hình mà không phải chạy lại benchmark. `notebook_attach_figures` nhúng ảnh từ `results/figures/` và
+`run_benchmark` ghi số liệu thô rồi gọi `plot_results`, nên một lệnh tái lập đủ `results/`.
+`plot_results` chỉ đọc CSV trong `results/`, nên có thể vẽ lại hình mà không phải chạy lại benchmark.
+Đường dẫn `RESULTS_DIR` nằm trong `experiments/__init__.py` để hai module không import vòng. `notebook_attach_figures` nhúng ảnh từ `results/figures/` và
 `docs/screenshots/` vào các cell markdown của báo cáo dưới dạng attachment.
 
 `sudoku_csp/datasets.py` đọc file trong `data/` bằng đường dẫn tương đối với package, nên chỉ dùng

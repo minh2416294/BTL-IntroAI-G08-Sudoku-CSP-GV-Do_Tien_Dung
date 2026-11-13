@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import io
 import sys
+from pathlib import Path
+
+RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 
 
 def console_use_utf8() -> None:

@@ -7,7 +7,7 @@ hay một bất biến dưới đây thì cập nhật luôn file này trong cù
 
 | Thành phần | Vai trò | Trạng thái |
 |---|---|---|
-| `sudoku_csp/` | Thư viện thuật toán, chỉ dùng thư viện chuẩn Python, không biết gì về web | Mới có khung |
+| `sudoku_csp/` | Thư viện thuật toán, chỉ dùng thư viện chuẩn Python, không biết gì về web | `board`, `csp`, `backtracking` đã có |
 | `app/` | Backend FastAPI và giao diện HTML/CSS/JS thuần, gọi vào `sudoku_csp/` | Phase 3 |
 | `experiments/` | Sinh bộ đề, chạy benchmark, vẽ biểu đồ, gắn hình vào báo cáo | Phase 2 và 4 |
 | `data/`, `results/` | Bộ đề và kết quả đo, được commit để báo cáo tái lập được | Phase 2 và 4 |

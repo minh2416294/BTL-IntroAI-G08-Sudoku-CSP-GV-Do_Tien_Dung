@@ -7,10 +7,14 @@ hay một bất biến dưới đây thì cập nhật luôn file này trong cù
 
 | Thành phần | Vai trò | Trạng thái |
 |---|---|---|
-| `sudoku_csp/` | Thư viện thuật toán, chỉ dùng thư viện chuẩn Python, không biết gì về web | `board`, `csp`, `backtracking` đã có |
+| `sudoku_csp/` | Thư viện thuật toán, chỉ dùng thư viện chuẩn Python, không biết gì về web | Đã có: `board`, `csp`, `backtracking`, `local_search`, `generator`, `datasets` |
 | `app/` | Backend FastAPI và giao diện HTML/CSS/JS thuần, gọi vào `sudoku_csp/` | Phase 3 |
-| `experiments/` | Sinh bộ đề, chạy benchmark, vẽ biểu đồ, gắn hình vào báo cáo | Phase 2 và 4 |
-| `data/`, `results/` | Bộ đề và kết quả đo, được commit để báo cáo tái lập được | Phase 2 và 4 |
+| `experiments/` | Sinh bộ đề, chạy benchmark, vẽ biểu đồ, gắn hình vào báo cáo | Đã có `make_dataset`; benchmark ở Phase 4 |
+| `data/` | Bộ đề tự sinh và top95, được commit để thí nghiệm tái lập được | Đã có (xem `data/NGUON_DU_LIEU.md`) |
+| `results/` | Kết quả đo và biểu đồ | Phase 4 |
+
+`sudoku_csp/datasets.py` đọc file trong `data/` bằng đường dẫn tương đối với package, nên chỉ dùng
+được khi chạy từ repo (cài kiểu editable), không dùng được khi cài package ở nơi khác.
 
 Luồng phụ thuộc chỉ đi một chiều: `app/` và `experiments/` gọi `sudoku_csp/`, còn `sudoku_csp/` không
 import ngược lại.

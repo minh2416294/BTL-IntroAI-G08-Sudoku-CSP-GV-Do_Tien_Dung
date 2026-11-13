@@ -8,6 +8,8 @@ giảng L6 (quay lui, MRV/Degree, LCV, Forward Checking, AC-3/MAC, Conflict-Dire
 cục bộ Min-Conflicts) cùng Simulated Annealing của bài giảng L4, sinh đề có nghiệm duy nhất, minh họa
 từng bước trên giao diện web và đo đạc, so sánh các kỹ thuật trên bộ đề có kiểm soát.
 
+![So sánh Forward Checking và MAC trên cùng một đề](docs/screenshots/so_sanh_mac_fc.jpg)
+
 ## Thành viên
 
 | Họ tên | MSSV |
@@ -17,18 +19,26 @@ từng bước trên giao diện web và đo đạc, so sánh các kỹ thuật 
 | Nguyễn Thanh Hải | 202416192 |
 | Bùi Hoàng Tú | 202416378 |
 
-## Trạng thái
+## Có gì trong repo
 
-Repo đang được xây dựng theo từng phase. Hiện mới có bộ khung (cấu hình, CI, báo cáo). Các phần solver,
-giao diện và thí nghiệm sẽ được bổ sung lần lượt, kèm hướng dẫn chạy ở mục dưới.
+- **Thư viện `sudoku_csp/`** (chỉ dùng thư viện chuẩn Python): một khung quay lui duy nhất với các điểm
+  cắm chọn biến (thứ tự cố định, MRV + Degree), chọn giá trị (tăng dần, LCV, ngẫu nhiên), suy diễn
+  (không có, Forward Checking, MAC) và kiểu quay lui (thường, CBJ), tức 24 cấu hình; Min-Conflicts với
+  hai cách biểu diễn trạng thái; Simulated Annealing; đếm lời giải và sinh đề có nghiệm duy nhất.
+- **Giao diện web `app/`**: nhập hoặc sinh đề, kiểm tra số lời giải, chạy một thuật toán rồi phát lại
+  từng bước (gán, cắt miền, miền rỗng, quay lui, nhảy CBJ, đổi chỗ, nâng nhiệt) với miền giá trị của
+  từng ô, bảng chỉ số, nhật ký có ghi slide và biểu đồ chi phí. Có chế độ so sánh song song hai cấu hình.
+- **Thí nghiệm `experiments/`**: sinh bộ đề, chạy benchmark (tắt ghi vết), vẽ hình và bảng vào
+  `results/`, nhúng hình vào báo cáo.
+- **Báo cáo** [Project_report_G08.ipynb](Project_report_G08.ipynb): các mục W3, W8 giữ nguyên như đã nộp;
+  các mục W15 là báo cáo cuối kỳ.
 
-## Chạy thử
+## Cài đặt
 
 Cần Python 3.11 trở lên. Cách khuyến nghị dùng [uv](https://docs.astral.sh/uv/):
 
 ```bash
 uv sync --all-extras
-uv run python -m pytest
 ```
 
 Nếu chưa có uv, dùng pip trong một môi trường ảo:
@@ -37,13 +47,98 @@ Nếu chưa có uv, dùng pip trong một môi trường ảo:
 python -m venv .venv
 .venv\Scripts\activate
 pip install -e ".[analysis,dev]"
-python -m pytest
 ```
 
-Các lệnh đều gọi qua `python -m` vì trên Windows bật Smart App Control, các file `pytest.exe`, `ruff.exe`
-trong `.venv` có thể bị chặn chạy trực tiếp.
+Các lệnh bên dưới đều gọi qua `python -m` vì trên Windows bật Smart App Control, các file `pytest.exe`,
+`uvicorn.exe` trong `.venv` có thể bị chặn chạy trực tiếp. Nếu dùng pip thì bỏ tiền tố `uv run`.
+
+## Chạy giao diện minh họa
+
+```bash
+uv run python -m uvicorn app.main:app --reload
+```
+
+Mở http://127.0.0.1:8000. Một lượt dùng thử:
+
+1. Chọn một đề trong "Đề mẫu" (ví dụ đề Wikipedia) hoặc bấm "Sinh đề" với số ô cho sẵn mong muốn,
+   rồi "Kiểm tra đề" để xem đề có 0, 1 hay nhiều lời giải.
+2. Chọn thuật toán và tùy chọn ở mục 2, bấm "Chạy".
+3. Ở mục 3, dùng "Phát", "Tiến 1", "Lùi 1" và thanh tua để xem từng sự kiện. Lưới nhỏ 3x3 trong mỗi
+   ô là các giá trị còn lại trong miền.
+4. Bật "So sánh song song hai cấu hình trên cùng một đề" để chạy cấu hình A và B rồi tua cùng lúc.
+
+Server giới hạn mỗi lượt ở 200 000 nút (hoặc bước), 10 giây và 60 000 sự kiện. Thời gian hiện trên
+giao diện được đo khi đang ghi vết nên không dùng để so hiệu năng; số liệu so sánh lấy từ benchmark.
+
+## Tái lập thí nghiệm
+
+Một lệnh tái lập toàn bộ số liệu, bảng và hình trong `results/` (khoảng 21 phút trên máy của nhóm):
+
+```bash
+uv run python -m experiments.run_benchmark
+```
+
+Lệnh này chạy 24 cấu hình quay lui trên 305 đề và ba phương pháp tìm kiếm cục bộ với ghi vết tắt, ghi
+CSV kèm tham số và thông tin máy (`results/env.json`), rồi gọi `plot_results` để ghi
+`results/tables.md`, các bảng tổng hợp và bốn hình trong `results/figures/`. Thêm `--quick` để chạy bản
+thu nhỏ trong khoảng 10 giây. Số nút và số bước là tất định nên chạy lại cho đúng các con số đó; thời
+gian thì phụ thuộc máy.
+
+Các lệnh phụ:
+
+- `uv run python -m experiments.plot_results`: chỉ vẽ lại hình và bảng từ CSV có sẵn.
+- `uv run python -m experiments.notebook_attach_figures`: nhúng hình vào báo cáo để notebook hiển thị
+  đủ hình trên GitHub và Colab.
+- `uv run python -m experiments.make_dataset`: sinh lại `data/puzzles_generated.csv` (7 mức số ô cho
+  sẵn x 30 đề, seed cố định) và kiểm tra mọi đề trong `data/top95.txt` có đúng một lời giải. Bộ đề đã
+  được commit nên không bắt buộc chạy lại.
+
+## Kiểm thử
+
+```bash
+uv run python -m pytest -q
+node --test "tests/js/*.test.mjs"
+uv run python -m ruff check .
+uv run python -m pyright
+```
+
+Test JavaScript cần Node 22 trở lên. Giá trị mong đợi trong test được lấy từ lý thuyết hoặc tính tay
+(lời giải công bố, đề vô nghiệm dựng tay, bất đẳng thức số nút giữa các kỹ thuật), không lấy từ output
+của code. CI trên GitHub Actions chạy toàn bộ các lệnh trên với Python 3.11 và 3.14.
+
+## Thuật toán và slide bài giảng
+
+| Kỹ thuật | Slide | Hàm |
+|---|---|---|
+| Mô hình CSP, đồ thị ràng buộc | L6 tr.4-9 | `board.PEERS`, `board_find_conflicts` |
+| Quay lui | L6 tr.15-17 | `backtracking_solve` |
+| Backjumping (CBJ) | L6 tr.22 | `_jump_over`, `_domain_conflict` |
+| MRV, Degree | L6 tr.26-27 | `_select_variable` |
+| LCV | L6 tr.28 | `_order_values` |
+| Forward Checking | L6 tr.29 | `_forward_check` |
+| AC-3, MAC | L6 tr.35-39 | `_ac3`, `_revise` |
+| Min-Conflicts | L6 tr.40-41 | `min_conflicts_solve` |
+| Simulated Annealing | L4 tr.37-39 | `simulated_annealing_solve` |
+
+Giải thích chi tiết, mã giả và ví dụ tính tay: [docs/THUAT_TOAN.md](docs/THUAT_TOAN.md).
+
+## Cấu trúc thư mục
+
+```text
+sudoku_csp/      thư viện giải và sinh đề (board, csp, backtracking, local_search, generator, datasets)
+app/             FastAPI (main.py, schemas.py) và giao diện tĩnh (static/: HTML, CSS, app.js, replay.js)
+experiments/     make_dataset, run_benchmark, plot_results, notebook_attach_figures
+data/            puzzles_generated.csv, top95.txt và nguồn gốc dữ liệu
+results/         CSV kết quả, tables.md, figures/, env.json
+tests/           pytest và tests/js (node --test)
+docs/            KIEN_TRUC.md, THUAT_TOAN.md, HOI_DAP.md, screenshots/
+```
 
 ## Tài liệu
 
 - [Báo cáo project](Project_report_G08.ipynb)
+- [Giải thích thuật toán](docs/THUAT_TOAN.md)
+- [Câu hỏi ôn vấn đáp](docs/HOI_DAP.md)
 - [Kiến trúc](docs/KIEN_TRUC.md)
+- [Nguồn dữ liệu](data/NGUON_DU_LIEU.md)
+- Phiên bản giữa kỳ của nhóm: [anthaimagic213/BTL-IntroAI-G8-GV-Do_Tien_Dung](https://github.com/anthaimagic213/BTL-IntroAI-G8-GV-Do_Tien_Dung)

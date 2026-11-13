@@ -24,8 +24,7 @@ import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.patches import Rectangle
 
-from experiments import console_use_utf8
-from experiments.run_benchmark import RESULTS_DIR
+from experiments import RESULTS_DIR, console_use_utf8
 
 SURFACE = "#fcfcfb"
 INK = "#0b0b0b"

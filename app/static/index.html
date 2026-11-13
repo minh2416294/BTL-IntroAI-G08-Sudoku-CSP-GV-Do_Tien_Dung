@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sudoku CSP: minh họa thuật toán (IT3160, nhóm G08)</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>Sudoku dưới góc nhìn bài toán thỏa mãn ràng buộc</h1>
+      <p>
+        Minh họa từng bước các kỹ thuật CSP (bài giảng L6) và tìm kiếm cục bộ (L4).
+        BTL Nhập môn Trí tuệ nhân tạo IT3160, nhóm G08, GV Đỗ Tiến Dũng.
+      </p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>1. Đề bài</h2>
+        <div class="puzzle-layout">
+          <div id="input-grid" class="input-grid" aria-label="Bảng nhập đề"></div>
+          <div class="puzzle-tools">
+            <label class="stack">
+              Đề mẫu
+              <select id="sample-select"></select>
+            </label>
+            <div class="row">
+              <label>
+                Sinh đề có
+                <input id="clue-input" type="number" min="22" max="70" value="32" />
+                ô cho sẵn
+              </label>
+              <button id="generate-btn" type="button">Sinh đề</button>
+            </div>
+            <div class="row">
+              <button id="analyze-btn" type="button">Kiểm tra đề</button>
+              <button id="clear-btn" type="button" class="secondary">Xóa bảng</button>
+            </div>
+            <p id="puzzle-status" class="status" role="status"></p>
+            <p class="hint">
+              Gõ số 1-9 vào ô, dùng phím mũi tên để di chuyển. "Kiểm tra đề" cho biết các ô cho sẵn
+              có trùng số không và đề có 0, 1 hay nhiều lời giải.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>2. Thuật toán</h2>
+        <label class="toggle">
+          <input type="checkbox" id="compare-toggle" />
+          So sánh song song hai cấu hình trên cùng một đề
+        </label>
+        <div class="configs">
+          <fieldset id="config-a"><legend>Cấu hình A</legend></fieldset>
+          <fieldset id="config-b" hidden><legend>Cấu hình B</legend></fieldset>
+        </div>
+        <div class="row">
+          <button id="run-btn" type="button" class="primary">Chạy</button>
+          <p id="run-status" class="status" role="status"></p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>3. Minh họa từng bước</h2>
+        <div class="controls">
+          <button id="first-btn" type="button">Về đầu</button>
+          <button id="prev-btn" type="button">Lùi 1</button>
+          <button id="play-btn" type="button" class="primary">Phát</button>
+          <button id="next-btn" type="button">Tiến 1</button>
+          <button id="last-btn" type="button">Tới cuối</button>
+          <label>
+            Tốc độ
+            <input id="speed-input" type="range" min="0" max="100" value="45" />
+          </label>
+          <span id="speed-label" class="muted"></span>
+        </div>
+        <div class="controls">
+          <input id="progress-input" type="range" min="0" max="0" value="0" />
+          <span id="progress-label" class="muted">Chưa chạy</span>
+        </div>
+        <div class="panels">
+          <article id="panel-a" class="panel"></article>
+          <article id="panel-b" class="panel" hidden></article>
+        </div>
+        <ul class="legend">
+          <li><span class="swatch given"></span>Ô cho sẵn</li>
+          <li><span class="swatch filled"></span>Ô đã gán</li>
+          <li><span class="swatch ev-assign"></span>Vừa gán / vừa đổi</li>
+          <li><span class="swatch pruned"></span>Giá trị vừa bị FC/AC-3 cắt</li>
+          <li><span class="swatch ev-wipeout"></span>Miền rỗng (thất bại)</li>
+          <li><span class="swatch ev-backtrack"></span>Quay lui</li>
+          <li><span class="swatch ev-conflict-set"></span>Tập xung đột của CBJ</li>
+          <li><span class="swatch conflict"></span>Ô đang vi phạm ràng buộc (local search)</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

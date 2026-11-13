@@ -7,6 +7,7 @@ import pytest
 from sudoku_csp.board import BOXES, DIGITS, Grid, board_is_solution
 from sudoku_csp.local_search import (
     LocalSearchResult,
+    Representation,
     local_conflict_pairs,
     local_rowcol_cost,
     min_conflicts_solve,
@@ -53,11 +54,11 @@ def test_box_representation_keeps_every_box_a_permutation(seed: int) -> None:
         assert all(given in (0, value) for given, value in pairs)
 
 
-def _run(method: str, puzzle: Grid, **kwargs: int | bool) -> LocalSearchResult:
+def _run(method: str, puzzle: Grid, max_steps: int) -> LocalSearchResult:
     if method == "sa":
-        return simulated_annealing_solve(puzzle, seed=1, **kwargs)  # type: ignore[arg-type]
-    representation = "cell" if method == "mc_cell" else "box"
-    return min_conflicts_solve(puzzle, representation, seed=1, **kwargs)  # type: ignore[arg-type]
+        return simulated_annealing_solve(puzzle, seed=1, max_steps=max_steps)
+    representation: Representation = "cell" if method == "mc_cell" else "box"
+    return min_conflicts_solve(puzzle, representation, seed=1, max_steps=max_steps)
 
 
 @pytest.mark.parametrize("method", ["mc_cell", "mc_box", "sa"])
@@ -85,8 +86,10 @@ def test_same_seed_gives_same_run() -> None:
 def test_trace_starts_with_full_state_and_ends_with_status() -> None:
     result = min_conflicts_solve(EASY_PUZZLE, "box", seed=1, trace=True)
     assert result.events is not None
-    assert result.events[0]["type"] == "init"
-    assert len(result.events[0]["values"]) == 81  # type: ignore[arg-type]
+    first = result.events[0]
+    assert first["type"] == "init"
+    assert isinstance(first["values"], list)
+    assert len(first["values"]) == 81
     assert result.events[-1] == {"type": "end", "status": "solved"}
 
 

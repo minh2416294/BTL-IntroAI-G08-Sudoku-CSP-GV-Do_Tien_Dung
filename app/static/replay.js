@@ -60,14 +60,14 @@ export function describeEvent(event) {
       return `Gán ô ${cellName(event.cell)} = ${event.value} (độ sâu ${event.depth})`;
     case "prune":
       return event.by === "fc"
-        ? `FC (L6 tr.29): xóa ${event.value} khỏi miền ô ${cellName(event.cell)}`
-        : `AC-3 (L6 tr.39): xóa ${event.value} khỏi miền ô ${cellName(event.cell)}`;
+        ? `FC: xóa ${event.value} khỏi miền ô ${cellName(event.cell)}`
+        : `AC-3: xóa ${event.value} khỏi miền ô ${cellName(event.cell)}`;
     case "wipeout":
       return `Miền ô ${cellName(event.cell)} rỗng: nhánh này thất bại`;
     case "unassign":
       return `Quay lui: bỏ gán ô ${cellName(event.cell)} = ${event.value}`;
     case "backjump":
-      return `CBJ (L6 tr.22): nhảy qua ô ${cellName(event.cell)}, tập xung đột {${event.conflict
+      return `CBJ: nhảy qua ô ${cellName(event.cell)}, tập xung đột {${event.conflict
         .map(cellName)
         .join(", ")}}`;
     case "init":
@@ -75,12 +75,12 @@ export function describeEvent(event) {
     case "restart":
       return `Kẹt quá lâu: khởi động lại ngẫu nhiên, h = ${event.cost}`;
     case "set":
-      return `Min-Conflicts (L6 tr.41): đổi ô ${cellName(event.cell)} thành ${event.value}, h = ${event.cost}`;
+      return `Min-Conflicts: đổi ô ${cellName(event.cell)} thành ${event.value}, h = ${event.cost}`;
     case "swap":
       if (event.temperature === undefined) {
         return `Min-Conflicts: đổi chỗ ${cellName(event.a)} và ${cellName(event.b)}, h = ${event.cost}`;
       }
-      return `SA (L4 tr.38): đổi chỗ ${cellName(event.a)} và ${cellName(event.b)}, h = ${event.cost}, T = ${event.temperature.toFixed(3)}`;
+      return `SA: đổi chỗ ${cellName(event.a)} và ${cellName(event.b)}, h = ${event.cost}, T = ${event.temperature.toFixed(3)}`;
     case "reheat":
       return `SA: kẹt khi đã nguội, nâng nhiệt độ lại T = ${event.temperature.toFixed(3)}`;
     case "end":

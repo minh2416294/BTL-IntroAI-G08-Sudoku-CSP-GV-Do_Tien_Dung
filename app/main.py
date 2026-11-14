@@ -45,7 +45,7 @@ TIME_LIMIT_S = 10.0
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 WIKI_PUZZLE = "53..7....6..195....98....6.8...6...34..8.3..17...2...6.6....28....419..5....8..79"
 
-app = FastAPI(title="Sudoku CSP - BTL IT3160 nhóm G08")
+app = FastAPI(title="Sudoku CSP - BTL IT3160 nhóm 8")
 
 
 @app.middleware("http")

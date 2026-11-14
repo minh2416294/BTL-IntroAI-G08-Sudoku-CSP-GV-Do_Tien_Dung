@@ -1,12 +1,12 @@
-"""Họ thuật toán tìm kiếm quay lui cho CSP Sudoku (L6 tr.15-39).
+"""Họ thuật toán tìm kiếm quay lui cho CSP Sudoku.
 
-Một khung quay lui duy nhất (L6 tr.17), cắm được từng kỹ thuật cải tiến của bài giảng:
+Một khung quay lui duy nhất, cắm được từng kỹ thuật cải tiến của bài giảng:
 
-- chọn biến: thứ tự cố định, hoặc MRV và phá hòa bằng Degree (tr.26-27);
-- chọn giá trị: thứ tự tăng dần, LCV (tr.28), hoặc ngẫu nhiên (dùng khi sinh lưới đầy);
-- suy diễn sau mỗi phép gán: không có, Forward Checking (tr.29), hoặc AC-3 duy trì phù hợp
-  cung, tức MAC (tr.34-39);
-- khi thất bại: quay lui theo thứ tự thời gian, hoặc Conflict-Directed Backjumping (tr.22).
+- chọn biến: thứ tự cố định, hoặc MRV và phá hòa bằng Degree;
+- chọn giá trị: thứ tự tăng dần, LCV, hoặc ngẫu nhiên (dùng khi sinh lưới đầy);
+- suy diễn sau mỗi phép gán: không có, Forward Checking, hoặc AC-3 duy trì phù hợp
+  cung, tức MAC;
+- khi thất bại: quay lui theo thứ tự thời gian, hoặc Conflict-Directed Backjumping.
 """
 
 from __future__ import annotations
@@ -150,7 +150,7 @@ class _BacktrackingSearch:
         return "solved" if self.solutions else "unsolvable"
 
     def _search(self, depth: int) -> tuple[bool, set[int]]:
-        """Một tầng của cây quay lui (L6 tr.17). Trả (đã xong, tập xung đột cho CBJ)."""
+        """Một tầng của cây quay lui. Trả (đã xong, tập xung đột cho CBJ)."""
         self._check_budget()
         var = self._select_variable()
         if var is None:
@@ -211,7 +211,7 @@ class _BacktrackingSearch:
 
     def _legal_values(self, cell: int) -> list[int]:
         """Các giá trị còn hợp lệ. Khi có suy diễn, miền đã được thu hẹp sẵn; khi không có,
-        phải loại trừ giá trị của các láng giềng đã gán (kiểm tra ràng buộc, L6 tr.15)."""
+        phải loại trừ giá trị của các láng giềng đã gán (kiểm tra ràng buộc)."""
         domain = self.csp.domains[cell]
         if self.options.inference != "none":
             return sorted(domain)
@@ -220,8 +220,8 @@ class _BacktrackingSearch:
         return sorted(domain - taken)
 
     def _select_variable(self) -> int | None:
-        """Thứ tự cố định, hoặc MRV: ít giá trị hợp lệ nhất (L6 tr.26), hòa thì chọn ô có
-        nhiều láng giềng chưa gán nhất, tức Degree (tr.27), hòa tiếp thì chọn ô đứng trước."""
+        """Thứ tự cố định, hoặc MRV: ít giá trị hợp lệ nhất, hòa thì chọn ô có
+        nhiều láng giềng chưa gán nhất, tức Degree, hòa tiếp thì chọn ô đứng trước."""
         values = self.csp.values
         if self.options.var_order == "static":
             return next((cell for cell in range(CELL_COUNT) if values[cell] == 0), None)
@@ -239,7 +239,7 @@ class _BacktrackingSearch:
 
     def _order_values(self, cell: int) -> list[int]:
         """Tăng dần, ngẫu nhiên, hoặc LCV: ưu tiên giá trị loại bỏ ít lựa chọn nhất của các
-        láng giềng chưa gán (L6 tr.28)."""
+        láng giềng chưa gán."""
         legal = self._legal_values(cell)
         if self.options.value_order == "random":
             self.rng.shuffle(legal)
@@ -290,7 +290,7 @@ class _BacktrackingSearch:
         return None
 
     def _forward_check(self, var: int, causes: frozenset[int]) -> int | None:
-        """Forward Checking (L6 tr.29): xóa giá trị của var khỏi miền các láng giềng chưa gán."""
+        """Forward Checking: xóa giá trị của var khỏi miền các láng giềng chưa gán."""
         csp = self.csp
         value = csp.values[var]
         for peer in PEER_LISTS[var]:
@@ -301,9 +301,9 @@ class _BacktrackingSearch:
         return None
 
     def _ac3(self, queue: deque[tuple[int, int]]) -> int | None:
-        """AC-3 (L6 tr.39): duyệt hàng đợi cung (X -> Y) cho tới khi mọi cung đều phù hợp.
+        """AC-3: duyệt hàng đợi cung (X -> Y) cho tới khi mọi cung đều phù hợp.
 
-        Khi D(X) bị thu hẹp, mọi cung (Z -> X) với Z != Y được xét lại (tr.37).
+        Khi D(X) bị thu hẹp, mọi cung (Z -> X) với Z != Y được xét lại.
         """
         csp = self.csp
         values = csp.values
@@ -323,7 +323,7 @@ class _BacktrackingSearch:
         return None
 
     def _revise(self, x: int, y: int) -> bool:
-        """Làm cung (X -> Y) phù hợp (L6 tr.35-36) cho ràng buộc X != Y.
+        """Làm cung (X -> Y) phù hợp cho ràng buộc X != Y.
 
         Giá trị v của X mất "giá trị hỗ trợ" ở Y khi và chỉ khi D(Y) = {v}, nên chỉ cần kiểm tra
         trường hợp D(Y) còn đúng một giá trị.

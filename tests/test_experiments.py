@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import csv
 import json
 from pathlib import Path
@@ -51,15 +52,25 @@ def test_figures_and_tables_are_written(quick_results: Path) -> None:
     assert "| MAC+MRV |" in (quick_results / "tables.md").read_text(encoding="utf-8")
 
 
-def test_attachments_are_embedded_for_referenced_images() -> None:
-    notebook: dict[str, Any] = {
-        "cells": [
-            {"cell_type": "markdown", "source": ["![H](attachment:so_sanh_mac_fc.jpg)"]},
-            {"cell_type": "markdown", "source": ["chữ thường"], "attachments": {"x": {}}},
-        ]
+def test_figure_cells_are_filled_with_data_uri_images() -> None:
+    """Colab không đọc attachment của cell, nên ảnh phải nằm ngay trong Markdown dạng data URI."""
+    image = notebook_attach_figures.notebook_find_image("so_sanh_mac_fc.jpg")
+    figure_cell = {
+        "cell_type": "markdown",
+        "metadata": {"figure": "so_sanh_mac_fc.jpg", "alt": "Hình 1"},
+        "source": ["ảnh cũ"],
+        "attachments": {"so_sanh_mac_fc.jpg": {}},
     }
-    attached = notebook_attach_figures.notebook_attach(notebook)
-    cells = notebook["cells"]
-    assert attached == ["so_sanh_mac_fc.jpg"]
-    assert "image/jpeg" in cells[0]["attachments"]["so_sanh_mac_fc.jpg"]
-    assert "attachments" not in cells[1]
+    text_cell = {"cell_type": "markdown", "metadata": {}, "source": ["chữ thường"]}
+    notebook: dict[str, Any] = {"cells": [figure_cell, text_cell]}
+
+    embedded = notebook_attach_figures.notebook_embed(notebook)
+
+    prefix = "![Hình 1](data:image/jpeg;base64,"
+    source = "".join(figure_cell["source"])
+    assert embedded == ["so_sanh_mac_fc.jpg"]
+    assert source.startswith(prefix)
+    assert source.endswith(")")
+    assert base64.b64decode(source[len(prefix) : -1]) == image.read_bytes()
+    assert "attachments" not in figure_cell
+    assert text_cell["source"] == ["chữ thường"]

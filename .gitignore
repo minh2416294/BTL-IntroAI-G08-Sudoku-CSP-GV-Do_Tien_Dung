@@ -27,3 +27,6 @@ artifacts/
 .planning/
 .claude/launch.json
 .claude/settings.local.json
+
+# Tài liệu ôn tập nội bộ của nhóm (giải thích thuật toán, câu hỏi vấn đáp, kiến trúc), không nộp
+tai-lieu-nhom/

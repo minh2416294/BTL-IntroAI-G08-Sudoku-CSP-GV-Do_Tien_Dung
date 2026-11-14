@@ -1,12 +1,12 @@
 # Sudoku CSP: giải, sinh đề và minh họa thuật toán thỏa mãn ràng buộc
 
-Bài tập lớn môn Nhập môn Trí tuệ nhân tạo (IT3160), lớp TTNT-162297, nhóm G08.
+Bài tập lớn môn Nhập môn Trí tuệ nhân tạo (IT3160), nhóm 8.
 Giảng viên: Đỗ Tiến Dũng.
 
-Đề tài: mô hình hóa Sudoku 9x9 thành bài toán thỏa mãn ràng buộc (CSP), cài đặt các kỹ thuật trong bài
-giảng L6 (quay lui, MRV/Degree, LCV, Forward Checking, AC-3/MAC, Conflict-Directed Backjumping, tìm kiếm
-cục bộ Min-Conflicts) cùng Simulated Annealing của bài giảng L4, sinh đề có nghiệm duy nhất, minh họa
-từng bước trên giao diện web và đo đạc, so sánh các kỹ thuật trên bộ đề có kiểm soát.
+Đề tài: mô hình hóa Sudoku 9x9 thành bài toán thỏa mãn ràng buộc (CSP), cài đặt các kỹ thuật tìm kiếm
+(quay lui, MRV/Degree, LCV, Forward Checking, AC-3/MAC, Conflict-Directed Backjumping, tìm kiếm cục bộ
+Min-Conflicts, Simulated Annealing), sinh đề có nghiệm duy nhất, minh họa từng bước trên giao diện web
+và đo đạc, so sánh các kỹ thuật trên bộ đề có kiểm soát.
 
 ![So sánh Forward Checking và MAC trên cùng một đề](docs/screenshots/so_sanh_mac_fc.jpg)
 
@@ -27,11 +27,9 @@ từng bước trên giao diện web và đo đạc, so sánh các kỹ thuật 
   hai cách biểu diễn trạng thái; Simulated Annealing; đếm lời giải và sinh đề có nghiệm duy nhất.
 - **Giao diện web `app/`**: nhập hoặc sinh đề, kiểm tra số lời giải, chạy một thuật toán rồi phát lại
   từng bước (gán, cắt miền, miền rỗng, quay lui, nhảy CBJ, đổi chỗ, nâng nhiệt) với miền giá trị của
-  từng ô, bảng chỉ số, nhật ký có ghi slide và biểu đồ chi phí. Có chế độ so sánh song song hai cấu hình.
+  từng ô, bảng chỉ số, nhật ký giải thích từng bước và biểu đồ chi phí. Có chế độ so sánh song song hai cấu hình.
 - **Thí nghiệm `experiments/`**: sinh bộ đề, chạy benchmark (tắt ghi vết), vẽ hình và bảng vào
   `results/`, nhúng hình vào báo cáo.
-- **Báo cáo** [Project_report_G08.ipynb](Project_report_G08.ipynb): các mục W3, W8 giữ nguyên như đã nộp;
-  các mục W15 là báo cáo cuối kỳ.
 
 ## Cài đặt
 
@@ -106,21 +104,19 @@ Test JavaScript cần Node 22 trở lên. Giá trị mong đợi trong test đư
 (lời giải công bố, đề vô nghiệm dựng tay, bất đẳng thức số nút giữa các kỹ thuật), không lấy từ output
 của code. CI trên GitHub Actions chạy toàn bộ các lệnh trên với Python 3.11 và 3.14.
 
-## Thuật toán và slide bài giảng
+## Thuật toán
 
-| Kỹ thuật | Slide | Hàm |
-|---|---|---|
-| Mô hình CSP, đồ thị ràng buộc | L6 tr.4-9 | `board.PEERS`, `board_find_conflicts` |
-| Quay lui | L6 tr.15-17 | `backtracking_solve` |
-| Backjumping (CBJ) | L6 tr.22 | `_jump_over`, `_domain_conflict` |
-| MRV, Degree | L6 tr.26-27 | `_select_variable` |
-| LCV | L6 tr.28 | `_order_values` |
-| Forward Checking | L6 tr.29 | `_forward_check` |
-| AC-3, MAC | L6 tr.35-39 | `_ac3`, `_revise` |
-| Min-Conflicts | L6 tr.40-41 | `min_conflicts_solve` |
-| Simulated Annealing | L4 tr.37-39 | `simulated_annealing_solve` |
-
-Giải thích chi tiết, mã giả và ví dụ tính tay: [docs/THUAT_TOAN.md](docs/THUAT_TOAN.md).
+| Kỹ thuật | Hàm |
+|---|---|
+| Mô hình CSP, đồ thị ràng buộc | `board.PEERS`, `board_find_conflicts` |
+| Quay lui | `backtracking_solve` |
+| Backjumping (CBJ) | `_jump_over`, `_domain_conflict` |
+| MRV, Degree | `_select_variable` |
+| LCV | `_order_values` |
+| Forward Checking | `_forward_check` |
+| AC-3, MAC | `_ac3`, `_revise` |
+| Min-Conflicts | `min_conflicts_solve` |
+| Simulated Annealing | `simulated_annealing_solve` |
 
 ## Cấu trúc thư mục
 
@@ -131,14 +127,10 @@ experiments/     make_dataset, run_benchmark, plot_results, notebook_attach_figu
 data/            puzzles_generated.csv, top95.txt và nguồn gốc dữ liệu
 results/         CSV kết quả, tables.md, figures/, env.json
 tests/           pytest và tests/js (node --test)
-docs/            KIEN_TRUC.md, THUAT_TOAN.md, HOI_DAP.md, screenshots/
+docs/            screenshots/ (ảnh chụp giao diện)
 ```
 
 ## Tài liệu
 
 - [Báo cáo project](Project_report_G08.ipynb)
-- [Giải thích thuật toán](docs/THUAT_TOAN.md)
-- [Câu hỏi ôn vấn đáp](docs/HOI_DAP.md)
-- [Kiến trúc](docs/KIEN_TRUC.md)
 - [Nguồn dữ liệu](data/NGUON_DU_LIEU.md)
-- Phiên bản giữa kỳ của nhóm: [anthaimagic213/BTL-IntroAI-G8-GV-Do_Tien_Dung](https://github.com/anthaimagic213/BTL-IntroAI-G8-GV-Do_Tien_Dung)

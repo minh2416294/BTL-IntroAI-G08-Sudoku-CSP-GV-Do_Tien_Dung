@@ -1,7 +1,7 @@
 """Sinh đề Sudoku có đúng một lời giải và đếm số lời giải của một đề.
 
 Cả hai việc đều dựa trên tìm kiếm quay lui với MAC + MRV, nên đây cũng là một ứng dụng của
-chính các kỹ thuật L6: kiểm tra một cấu hình người dùng nhập có hợp lệ (0, 1 hay nhiều lời giải)
+chính các kỹ thuật CSP: kiểm tra một cấu hình người dùng nhập có hợp lệ (0, 1 hay nhiều lời giải)
 và tạo bộ đề có kiểm soát cho phần thí nghiệm.
 """
 

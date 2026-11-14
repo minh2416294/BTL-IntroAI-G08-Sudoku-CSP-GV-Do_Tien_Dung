@@ -1,7 +1,7 @@
 [project]
 name = "sudoku-csp"
 version = "0.1.0"
-description = "Giải, sinh và minh họa Sudoku bằng các kỹ thuật thỏa mãn ràng buộc (CSP). BTL IT3160, nhóm G08."
+description = "Giải, sinh và minh họa Sudoku bằng các kỹ thuật thỏa mãn ràng buộc (CSP). BTL IT3160, nhóm 8."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

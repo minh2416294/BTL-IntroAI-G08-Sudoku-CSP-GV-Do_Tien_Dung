@@ -1,7 +1,7 @@
 """Trạng thái tìm kiếm của CSP Sudoku: phép gán, miền giá trị và trail để quay lui.
 
-Bám theo L6 tr.15-17 (quay lui gán từng biến) và tr.29 (theo dõi các giá trị còn hợp lệ của
-biến chưa gán). Mọi thay đổi trên miền giá trị đi qua trail, nên quay lui chỉ cần pop trail
+Dùng cho quay lui gán từng biến và cho việc theo dõi các giá trị còn hợp lệ của biến chưa
+gán. Mọi thay đổi trên miền giá trị đi qua trail, nên quay lui chỉ cần pop trail
 về một mốc: chi phí tỷ lệ với số thay đổi thật, không phải sao chép cả 81 miền ở mỗi nút.
 """
 
@@ -55,7 +55,7 @@ class SudokuCSP:
     """Phép gán hiện tại, miền giá trị D(X) của từng ô và trail để hoàn tác.
 
     pruned_by[X][v] là tập các biến đã gán gây ra việc xóa v khỏi D(X). Conflict-Directed
-    Backjumping dùng thông tin này để biết vì sao một miền bị thu hẹp (L6 tr.22). Ô cho sẵn là
+    Backjumping dùng thông tin này để biết vì sao một miền bị thu hẹp. Ô cho sẵn là
     hằng số của đề nên không bao giờ xuất hiện trong các tập lý do.
     """
 

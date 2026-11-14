@@ -84,14 +84,18 @@ test("conflicting cells are the ones sharing a value with a peer", () => {
   assert.deepEqual([...conflictingCells(values)].sort((a, b) => a - b), [0, 8]);
 });
 
-test("messages cite the lecture slides", () => {
+test("messages name the technique without slide references", () => {
   assert.equal(
     describeEvent({ type: "prune", cell: 10, value: 7, by: "ac3" }),
-    "AC-3 (L6 tr.39): xóa 7 khỏi miền ô (2,2)",
+    "AC-3: xóa 7 khỏi miền ô (2,2)",
+  );
+  assert.equal(
+    describeEvent({ type: "prune", cell: 10, value: 7, by: "fc" }),
+    "FC: xóa 7 khỏi miền ô (2,2)",
   );
   assert.equal(
     describeEvent({ type: "backjump", cell: 0, conflict: [3, 80] }),
-    "CBJ (L6 tr.22): nhảy qua ô (1,1), tập xung đột {(1,4), (9,9)}",
+    "CBJ: nhảy qua ô (1,1), tập xung đột {(1,4), (9,9)}",
   );
 });
 

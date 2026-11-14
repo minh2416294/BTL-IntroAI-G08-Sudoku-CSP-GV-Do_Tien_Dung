@@ -5,7 +5,7 @@
 
 Chạy xong thì gọi luôn `plot_results`, nên một lệnh tái lập đủ số liệu, bảng và hình.
 
-Thí nghiệm 1 (tìm kiếm hệ thống): đủ 24 tổ hợp kỹ thuật của L6 trên bộ đề tự sinh và top95. Mỗi lượt
+Thí nghiệm 1 (tìm kiếm hệ thống): đủ 24 tổ hợp quay lui trên bộ đề tự sinh và top95. Mỗi lượt
 giải có trần số nút; lượt chạm trần được ghi `limit`, không bao giờ tính như đã giải. Ghi vết luôn
 tắt nên thời gian đo không lẫn chi phí ghi log.
 

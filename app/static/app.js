@@ -12,9 +12,9 @@ const $ = (id) => document.getElementById(id);
 
 const LOG_LINES = 12;
 const ALGORITHMS = [
-  ["backtracking", "Quay lui (L6 tr.15-39)"],
-  ["min_conflicts", "Min-Conflicts (L6 tr.41)"],
-  ["simulated_annealing", "Simulated Annealing (L4 tr.37-39)"],
+  ["backtracking", "Quay lui"],
+  ["min_conflicts", "Min-Conflicts"],
+  ["simulated_annealing", "Simulated Annealing"],
 ];
 const INFERENCES = [
   ["none", "Không (quay lui thuần)"],

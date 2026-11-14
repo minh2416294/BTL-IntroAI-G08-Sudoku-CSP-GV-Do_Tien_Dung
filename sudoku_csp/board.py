@@ -1,4 +1,4 @@
-"""Mô hình CSP của Sudoku 9x9 (L6 tr.4-7): biến, miền giá trị và đồ thị ràng buộc.
+"""Mô hình CSP của Sudoku 9x9: biến, miền giá trị và đồ thị ràng buộc.
 
 Mỗi ô là một biến, đánh chỉ số 0..80 theo hàng (ô (r, c) có chỉ số r * 9 + c).
 Miền giá trị là {1..9}. Ràng buộc AllDifferent trên mỗi hàng, cột và khối 3x3 được phân

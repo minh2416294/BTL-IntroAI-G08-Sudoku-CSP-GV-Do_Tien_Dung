@@ -1,16 +1,16 @@
-"""Tìm kiếm cục bộ cho CSP Sudoku (L6 tr.40-42, L4 tr.30-39).
+"""Tìm kiếm cục bộ cho CSP Sudoku.
 
 Mỗi trạng thái là một phép gán ĐẦY ĐỦ cho mọi ô, kể cả khi còn vi phạm ràng buộc. Dịch chuyển là
-đổi giá trị của một vài ô, và trạng thái đích là trạng thái không còn ràng buộc nào bị vi phạm
-(L6 tr.40). Có hai cách biểu diễn trạng thái:
+đổi giá trị của một vài ô, và trạng thái đích là trạng thái không còn ràng buộc nào bị vi phạm.
+Có hai cách biểu diễn trạng thái:
 
-- "cell" (đúng như L6 tr.41): mỗi ô trống nhận một số bất kỳ 1..9. Hàm đánh giá h là số cặp ô
+- "cell" (cách biểu diễn trực tiếp): mỗi ô trống nhận một số bất kỳ 1..9. Hàm đánh giá h là số cặp ô
   láng giềng mang cùng số, tức số ràng buộc nhị phân bị vi phạm.
 - "box": mỗi khối 3x3 luôn chứa một hoán vị của 1..9, nên ràng buộc khối luôn thỏa; bước đi là
   đổi chỗ hai ô không cho sẵn trong cùng một khối. h là tổng số chữ số còn thiếu trên các hàng
   và các cột.
 
-Hai thuật toán: Min-Conflicts (L6 tr.41) và Simulated Annealing (L4 tr.37-39).
+Hai thuật toán: Min-Conflicts và Simulated Annealing.
 """
 
 from __future__ import annotations
@@ -245,11 +245,11 @@ def min_conflicts_solve(
     trace: bool = False,
     max_events: int = 50_000,
 ) -> LocalSearchResult:
-    """Min-Conflicts (L6 tr.41): chọn ngẫu nhiên một ô đang vi phạm ràng buộc, rồi cho nó giá
+    """Min-Conflicts: chọn ngẫu nhiên một ô đang vi phạm ràng buộc, rồi cho nó giá
     trị (hoặc với biểu diễn "box", đổi chỗ với ô cùng khối) làm h nhỏ nhất. Giữ nguyên hiện
     trạng cũng là một lựa chọn, hòa thì chọn ngẫu nhiên. Sau `restart_after` bước không cải thiện
     được h tốt nhất thì khởi động lại từ trạng thái ngẫu nhiên, vì leo đồi dễ kẹt ở cực trị địa
-    phương (L4 tr.31).
+    phương.
     """
     rng = random.Random(seed)
     run = _Run(max_steps, time_limit_s, sample_every, Tracer(max_events) if trace else None)
@@ -316,7 +316,7 @@ def simulated_annealing_solve(
     trace: bool = False,
     max_events: int = 50_000,
 ) -> LocalSearchResult:
-    """Simulated Annealing (L4 tr.37-39) trên biểu diễn "box".
+    """Simulated Annealing trên biểu diễn "box".
 
     Mỗi bước thử đổi chỗ ngẫu nhiên hai ô trong một khối. Bước làm h giảm hoặc giữ nguyên luôn
     được nhận; bước làm h tăng một lượng delta được nhận với xác suất exp(-delta / T). Nhiệt độ

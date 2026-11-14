@@ -1,9 +1,9 @@
-"""Nhúng ảnh vào notebook báo cáo dưới dạng attachment của cell markdown.
+"""Nhúng ảnh vào notebook báo cáo để hiện được trên GitHub, Colab và Jupyter không cần mạng.
 
-Cell markdown tham chiếu ảnh bằng `![...](attachment:ten_anh.png)`. Script tìm file ảnh cùng tên
-trong `results/figures/` hoặc `docs/screenshots/`, mã hóa base64 và ghi vào trường `attachments`
-của cell. Nhờ vậy notebook hiển thị đủ hình khi mở trên GitHub, Jupyter hay Colab mà không phụ thuộc
-đường dẫn tương đối.
+Mỗi hình nằm trong một cell markdown riêng, có metadata `figure` (tên file ảnh) và `alt` (chú
+thích ngắn). Script tìm file ảnh cùng tên trong `results/figures/` hoặc `docs/screenshots/`, rồi
+ghi lại nội dung cell thành `![alt](data:image/...;base64,...)`. Không dùng attachment của cell vì
+Colab không hiển thị attachment. Chạy lại bất cứ lúc nào sau khi vẽ lại hình:
 
     uv run python -m experiments.notebook_attach_figures
 """
@@ -13,7 +13,6 @@ from __future__ import annotations
 import argparse
 import base64
 import json
-import re
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -24,7 +23,6 @@ ROOT = Path(__file__).resolve().parent.parent
 NOTEBOOK = ROOT / "Project_report_G08.ipynb"
 IMAGE_DIRS = (ROOT / "results" / "figures", ROOT / "docs" / "screenshots")
 MIME = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}
-ATTACHMENT = re.compile(r"\(attachment:([^)\s]+)\)")
 
 
 def notebook_find_image(name: str) -> Path:
@@ -35,24 +33,20 @@ def notebook_find_image(name: str) -> Path:
     raise FileNotFoundError(f"Không tìm thấy ảnh {name} trong {[str(d) for d in IMAGE_DIRS]}")
 
 
-def notebook_attach(notebook: dict[str, Any]) -> list[str]:
-    """Gắn ảnh cho mọi cell markdown có tham chiếu attachment. Trả danh sách tên ảnh đã gắn."""
-    attached: list[str] = []
+def notebook_embed(notebook: dict[str, Any]) -> list[str]:
+    """Điền lại mọi cell hình bằng ảnh hiện tại dạng data URI. Trả danh sách tên ảnh đã nhúng."""
+    embedded: list[str] = []
     for cell in notebook["cells"]:
-        if cell.get("cell_type") != "markdown":
+        name = cell.get("metadata", {}).get("figure")
+        if cell.get("cell_type") != "markdown" or not name:
             continue
-        names = ATTACHMENT.findall("".join(cell.get("source", [])))
-        if not names:
-            cell.pop("attachments", None)
-            continue
-        attachments: dict[str, dict[str, str]] = {}
-        for name in names:
-            path = notebook_find_image(name)
-            data = base64.b64encode(path.read_bytes()).decode("ascii")
-            attachments[name] = {MIME[path.suffix.lower()]: data}
-            attached.append(name)
-        cell["attachments"] = attachments
-    return attached
+        path = notebook_find_image(name)
+        data = base64.b64encode(path.read_bytes()).decode("ascii")
+        alt = cell["metadata"].get("alt", name)
+        cell["source"] = [f"![{alt}](data:{MIME[path.suffix.lower()]};base64,{data})"]
+        cell.pop("attachments", None)
+        embedded.append(name)
+    return embedded
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -62,9 +56,9 @@ def main(argv: Sequence[str] | None = None) -> None:
     console_use_utf8()
     path: Path = args.notebook
     notebook = json.loads(path.read_text(encoding="utf-8"))
-    attached = notebook_attach(notebook)
+    embedded = notebook_embed(notebook)
     path.write_text(json.dumps(notebook, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Đã gắn {len(attached)} ảnh vào {path.name}: {', '.join(attached) or 'không có'}")
+    print(f"Đã nhúng {len(embedded)} ảnh vào {path.name}: {', '.join(embedded) or 'không có'}")
 
 
 if __name__ == "__main__":

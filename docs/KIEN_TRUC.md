@@ -15,8 +15,12 @@ hay một bất biến dưới đây thì cập nhật luôn file này trong cù
 
 `run_benchmark` ghi số liệu thô rồi gọi `plot_results`, nên một lệnh tái lập đủ `results/`.
 `plot_results` chỉ đọc CSV trong `results/`, nên có thể vẽ lại hình mà không phải chạy lại benchmark.
-Đường dẫn `RESULTS_DIR` nằm trong `experiments/__init__.py` để hai module không import vòng. `notebook_attach_figures` nhúng ảnh từ `results/figures/` và
-`docs/screenshots/` vào các cell markdown của báo cáo dưới dạng attachment.
+Đường dẫn `RESULTS_DIR` nằm trong `experiments/__init__.py` để hai module không import vòng.
+
+Mỗi hình trong báo cáo là một cell markdown riêng, có metadata `figure` (tên file) và `alt`.
+`notebook_attach_figures` điền ảnh từ `results/figures/` hoặc `docs/screenshots/` vào các cell đó
+dưới dạng data URI trong Markdown. Không dùng attachment của cell vì Colab không hiển thị attachment;
+data URI không cần mạng và đã được thử hiển thị đúng trên cả GitHub lẫn Colab ngày 14/11/2026.
 
 `sudoku_csp/datasets.py` đọc file trong `data/` bằng đường dẫn tương đối với package, nên chỉ dùng
 được khi chạy từ repo (cài kiểu editable), không dùng được khi cài package ở nơi khác.
